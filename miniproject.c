@@ -231,7 +231,7 @@ int main()
     create();
 	//addItem("banana",10);
 	do{
-		printf("1. MENU AND ORDER\t2. ORDER STATUS\t3. ADMIN LOGIN\t4. EXIT\n");
+		printf("1. MENU AND ORDER\n2. ORDER STATUS\n3. ADMIN LOGIN\t4. EXIT\n");
 		printf("enter choice\n");
 		scanf("%d",&c);
 		switch(c)
@@ -242,6 +242,7 @@ int main()
 			break;
 			case 3: adminLogin();
 			break;
+	
 			case 4:break;
 		}
 
