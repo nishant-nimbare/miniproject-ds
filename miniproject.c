@@ -292,7 +292,7 @@ void adminLogin(){
 void changeStatus(){
     int c=0,c1=0,orderNo;
     do {
-        printf("press 1 to change status \n any other key to exit ");
+        printf("press 1 to change status \n 0 to exit ");
         //getch();
         fflush(stdout);
         scanf(" %d",&c);
