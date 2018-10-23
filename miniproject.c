@@ -273,17 +273,14 @@ void adminLogin(){
 
     }else{
         do{
-                getch();
             printf("1.status\t2.add item\t3.change status \t4.logout\n");
             scanf("%d",&c);
             switch(c){
                 case 1:adminStatus();
-
                     break;
                 case 2:addItem_admin();
                     break;
                 case 3:changeStatus();
-                        getch();
                     break;
 
                 default:;
@@ -293,20 +290,23 @@ void adminLogin(){
 }
 
 void changeStatus(){
-    int c,orderNo;
-    //do {
-        printf("press 1 to change status \n any-other key to exit ");
-        scanf("%d",&c);
+    int c=0,c1=0,orderNo;
+    do {
+        printf("press 1 to change status \n any other key to exit ");
+        //getch();
+        fflush(stdout);
+        scanf(" %d",&c);
         if (c==1){
             orderNo=dequeue();
             addCompleted(orderNo);
             printf("order no %d was completed\n",orderNo);
-
         }else{
-            c=-1;
-        return;
+        break;
         }
-    //}while(c==1);
+        printf("again? (1/0)");
+        fflush(stdout);
+        scanf("%d",&c1);
+    }while(c1!=0);
 
 }
 
