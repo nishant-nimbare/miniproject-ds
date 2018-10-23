@@ -21,9 +21,13 @@ struct queue{
     struct queue *next;
 };
 
+struct complete{
+    int orderNo;
+    struct queue *next;
+};
 
 struct item *start=NULL;
-
+struct complete *c_start;
 struct queue *head=NULL;
 struct queue *tail=NULL;
 
@@ -31,6 +35,7 @@ struct queue *tail=NULL;
 void addItem(char n[],int p);
 void enqueue(int orderNo);
 int dequeue();    //returns order no.
+void addCompleted(int orderNO);
 
 void create();
 void menu();
@@ -100,6 +105,14 @@ int dequeue(){
 
 }
 
+void addCompleted(int orderNO){
+    struct complete *new_complete ;
+    new_complete =(struct complete *)malloc(sizeof(struct complete));
+    new_complete->orderNo=orderNO;
+    new_complete->next=c_start;
+    c_start=new_complete;
+
+}
 void addItem_admin(){
 
 	char n[10];
@@ -175,6 +188,13 @@ void showStatus(){
         ptr=ptr->next;
     }
 
+    printf("\ncompleted\n");
+    ptr=c_start;
+    while(ptr!=NULL){
+        printf("%d\n",ptr->orderNo);
+        ptr=ptr->next;
+    }
+
 }
 
 void adminStatus(){
@@ -210,7 +230,7 @@ void adminLogin(){
 
     }else{
         do{
-            printf("1.status\t2.add item\t3.logout\n");
+            printf("1.status\t2.add item\t3.change order status \t4.logout\n");
             scanf("%d",&c);
             switch(c){
                 case 1:adminStatus();
@@ -218,11 +238,28 @@ void adminLogin(){
                     break;
                 case 2:addItem_admin();
                     break;
-                case 3:break;
+                case 3:changeStatus();
+                    break;
 
             }
-        }while(c!=3);
+        }while(c!=4);
     }
+}
+
+void changeStatus(){
+    int c,orderNo;
+    do {
+        printf("press 1 to change status \n any other key to exit ");
+        scanf("%d",&c);
+        if (c==1){
+            orderNo=dequeue();
+            addCompleted(orderNo);
+            printf("order no %d was completed\n",orderNo);
+        }else{
+        break;
+        }
+    }while(c==1);
+
 }
 
 int main()
