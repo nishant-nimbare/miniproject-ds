@@ -4,6 +4,9 @@
 #include<time.h>
 #include<string.h>
 #include<malloc.h>
+#include<ctype.h>
+#include<process.h>
+#include<windows.h>
 
 static int orders=100;
 
@@ -35,7 +38,7 @@ struct queue *tail=NULL;
 void addItem(char n[],int p);
 void enqueue(int orderNo);
 int dequeue();    //returns order no.
-void addCompleted(int orderNO);
+void addCompleted(int orderNo);
 
 void create();
 void menu();
@@ -46,6 +49,8 @@ void showStatus();
 void addItem_admin();
 void adminStatus();
 void adminLogin();
+void gotoxy(int x,int y);
+void welcome();
 
 
 void addItem(char n[],int p){
@@ -87,6 +92,50 @@ void enqueue(int orderNo){
     }
 }
 
+void welcome(){
+	int i,k=6,r,q;
+	gotoxy(40,5);
+	for(i=0;i<=50;i++)
+	printf("*");
+	for(i=0;i<20;i++)
+	{
+	gotoxy(40,k);
+	printf("*");
+	gotoxy(90,k);
+	printf("*");
+	printf("\n");
+	k++;
+	}
+	gotoxy(41,25);
+	for(i=0;i<=49;i++)
+	printf("*");
+	gotoxy(45,7);
+
+	printf("**** WELCOME TO NCN ICE CREAM PALOUR****");
+	gotoxy(50,8);
+	printf("what we offer?");
+	gotoxy(45,9);
+	printf("->fast service");
+	gotoxy(45,10);
+	printf("->hygine");
+	gotoxy(45,11);
+	printf("->order tracking system");
+
+
+		gotoxy(50,14);
+	printf("menu is being loaded....");
+	gotoxy(50,15);
+	for(r=0;r<=20;r++)
+	{
+		for(q=0;q<=10000000;q++);
+		printf("%c",177);
+
+	}
+     getch();
+
+	getch();
+}
+
 int dequeue(){
   struct queue *ptr;
 
@@ -113,6 +162,7 @@ void addCompleted(int orderNO){
     c_start=new_complete;
 
 }
+
 void addItem_admin(){
 
 	char n[10];
@@ -126,7 +176,7 @@ void addItem_admin(){
 }
 
 void create(){
-	printf("menu  created\n");
+
 	int i=0;
 	char name[10];
 	char arr_n[10][10]={"a1","b2","c3","d4","e5","f6","g7","h8","i9","j0"};
@@ -188,13 +238,6 @@ void showStatus(){
         ptr=ptr->next;
     }
 
-    printf("\ncompleted\n");
-    ptr=c_start;
-    while(ptr!=NULL){
-        printf("%d\n",ptr->orderNo);
-        ptr=ptr->next;
-    }
-
 }
 
 void adminStatus(){
@@ -230,7 +273,8 @@ void adminLogin(){
 
     }else{
         do{
-            printf("1.status\t2.add item\t3.change order status \t4.logout\n");
+                getch();
+            printf("1.status\t2.add item\t3.change status \t4.logout\n");
             scanf("%d",&c);
             switch(c){
                 case 1:adminStatus();
@@ -239,33 +283,68 @@ void adminLogin(){
                 case 2:addItem_admin();
                     break;
                 case 3:changeStatus();
+                        getch();
                     break;
 
+                default:;
             }
-        }while(c!=4);
+        }while(c!=3);
     }
 }
 
 void changeStatus(){
     int c,orderNo;
-    do {
+    //do {
         printf("press 1 to change status \n any-other key to exit ");
         scanf("%d",&c);
         if (c==1){
             orderNo=dequeue();
             addCompleted(orderNo);
             printf("order no %d was completed\n",orderNo);
+
         }else{
-        break;
+            c=-1;
+        return;
         }
-    }while(c==1);
+    //}while(c==1);
 
 }
 
+void gotoxy(int x,int y)
+{
+	COORD coord;
+	HANDLE a;
+	coord.X=x;
+	coord.Y=y;
+	a=GetStdHandle(STD_OUTPUT_HANDLE);
+
+SetConsoleCursorPosition(a,coord);
+
+}
+
+/*void load()
+{
+	int r,q;
+
+	gotoxy(30,14);
+	printf("menu is being loaded....");
+	gotoxy(30,15);
+	for(r=0;r<=20;r++)
+	{
+		for(q=0;q<=10000000;q++);
+		printf("%c",177);
+
+	}
+     getch();
+}*/
+
 int main()
-{	int c;
+{
+	int c;
+	welcome();
+	system("cls");
     create();
-	//addItem("banana",10);
+
 	do{
 		printf("1. MENU AND ORDER\n2. ORDER STATUS\n3. ADMIN LOGIN\t4. EXIT\n");
 		printf("enter choice\n");
