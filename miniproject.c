@@ -249,7 +249,7 @@ void adminLogin(){
 void changeStatus(){
     int c,orderNo;
     do {
-        printf("press 1 to change status \n any other key to exit ");
+        printf("press 1 to change status \n any-other key to exit ");
         scanf("%d",&c);
         if (c==1){
             orderNo=dequeue();
@@ -263,8 +263,7 @@ void changeStatus(){
 }
 
 int main()
-{
-	int c;
+{	int c;
     create();
 	//addItem("banana",10);
 	do{
@@ -279,10 +278,9 @@ int main()
 			break;
 			case 3: adminLogin();
 			break;
-	
+
 			case 4:break;
 		}
-
 	}
 	while(c!=4);
 
