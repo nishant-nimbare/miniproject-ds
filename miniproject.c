@@ -12,7 +12,7 @@ static int orders=100;
 
 /*for linked list*/
 struct item{
-     char name[10];
+     char name[11];
      int price;
      int orders;
      struct item *next;
@@ -39,6 +39,8 @@ void addItem(char n[],int p);
 void enqueue(int orderNo);
 int dequeue();    //returns order no.
 void addCompleted(int orderNo);
+int itemsSize();
+int queueSize();
 
 void create();
 void menu();
@@ -47,11 +49,36 @@ void showStatus();
 
 //admin functions
 void addItem_admin();
+void deleteItem();
 void adminStatus();
 void adminLogin();
+void changeStatus();
 void gotoxy(int x,int y);
 void welcome();
+int peekQueue();
 
+int itemsSize(){
+    int c=0;
+    struct item *ptr;
+    ptr=start;
+    while(ptr!=NULL){
+        c++;
+        ptr=ptr->next;
+    }
+
+    return c;
+}
+
+int queueSize(){
+    int c=0;
+    struct queue *ptr;
+    ptr=head;
+    while(ptr!=NULL){
+        c++;
+        ptr=ptr->next;
+    }
+    return c;
+}
 
 void addItem(char n[],int p){
 
@@ -131,7 +158,8 @@ void welcome(){
 		printf("%c",177);
 
 	}
-     getch();
+    gotoxy(50,16);
+    printf("press any key to start");
 
 	getch();
 }
@@ -172,15 +200,57 @@ void addItem_admin(){
 	printf("enter amount\n");
 	scanf("%d",&p);
     addItem(n,p);
+    printf("%s was added in the menu",n);
+    getch();
+}
 
+void deleteItem(){
+    int k=1,choice;
+	struct item *ptr,*pre;
+	ptr=start;
+	printf("********************************\n");
+	printf("sr no.\t   flavours\t price\n");
+	printf("********************************\n");
+	while(ptr!=NULL){
+
+		printf("%d\t   %s\t  %d rs\n\n",k,ptr->name,ptr->price);
+		ptr=ptr->next;
+		k++;
+	}
+
+	ptr=start;
+	printf("select the item to delete ,0 to go back\n");
+	scanf("%d",&choice);
+	if(choice<=itemsSize() && choice>0){
+        choice--;
+        while(choice>0){
+            choice--;
+            pre=ptr;
+            ptr=ptr->next;
+        }
+
+        printf("are you sure you want to delete %s? (1/0)",ptr->name);
+        scanf("%d",&choice);
+        if(choice==1){
+            pre->next=ptr->next;
+            free(ptr);
+            printf("item was deleted");
+            getch();
+        }
+	}
+	else{
+	    system("cls");
+        printf("please select between 1 to %d\n",itemsSize());
+        deleteItem();
+	}
 }
 
 void create(){
 
 	int i=0;
-	char name[10];
-	char arr_n[10][10]={"a1","b2","c3","d4","e5","f6","g7","h8","i9","j0"};
-	int arr_p[]={10,20,30,40,50,60,70,80,90,100};
+	char name[100];
+	char arr_n[11][100]={"mango      ","sitaphal   ","litchi     ","coconut    ","jackfruit  ","kesar pista","chickoo    ","chocobite  ","kaju kismis","anjeer     "};
+	int arr_p[]={60,50,50,70,50,60,70,50,70,70};
 	for(i=0;i<10;i++){
 		strcpy(name,arr_n+i);
 	//	printf("string copied %s",arr_n+i);
@@ -190,15 +260,21 @@ void create(){
 }
 
 void menu(){
+	int k=1;
 	struct item *ptr;
 	ptr=start;
-
+	printf("********************************\n");
+	printf("sr no.\t   flavours\t price\n");
+	printf("********************************\n");
 	while(ptr!=NULL){
-		printf("%s \t %d\n",ptr->name,ptr->price);
+
+		printf("%d\t   %s\t  %d rs\n\n",k,ptr->name,ptr->price);
 		ptr=ptr->next;
+		k++;
 	}
 
     takeOrder();
+    getch();
 }
 
 void takeOrder(){
@@ -209,6 +285,7 @@ void takeOrder(){
     printf("enter ice cream no.\n");
     scanf("%d",&choice);
 
+    if(choice<=itemsSize() && choice>0){
     choice--;
     while(choice>0){
         choice--;
@@ -227,9 +304,14 @@ void takeOrder(){
 //    }else{
 //       printf("going back....");
 //    }
+    }else{
+        printf("please select between 1 to %d",itemsSize());
+        takeOrder();
+    }
 }
 
 void showStatus(){
+	char c;
     struct queue *ptr;
     ptr=head;
      printf("pending\n");
@@ -238,34 +320,55 @@ void showStatus(){
         ptr=ptr->next;
     }
 
+        ptr=c_start;
+     printf("\ncompleted\n");
+    while(ptr!=NULL){
+        printf("%d\n",ptr->orderNo);
+        ptr=ptr->next;
+    }
+
+    getch();
 }
 
 void adminStatus(){
     struct item *iceCream;
     int price,orders,total,sale=0;
-    char name[10];
+    char name[11];
     iceCream=start;
 
 
-    printf("product\tprice\torders\ttotal\n");
+    printf("product        price  orders    total\n");
     while(iceCream!=NULL){
          strcpy(name,iceCream->name);
          price =iceCream->price;
          orders=iceCream->orders;
          total = price*orders;
-        printf("%s\t%d\t%d\t%d\n",name,price,orders,total);
+        printf("%s  \t%d\t%d\t%d\n",name,price,orders,total);
         sale+=total;
         iceCream=iceCream->next;
     }
     printf("total sale = %d\n",sale);
+    getch();
 }
 
 void adminLogin(){
     char pass[10];
-    char password[]="aaa";
+    char password[]="qwerty";
     int result=-1,c;
+    int p=0;
     printf("enter password for admin\n");
-    scanf("%s",&pass);
+
+	do{
+		pass[p]=getch();
+		if(pass[p]!='\r'){
+			printf("*");
+		}
+		p++;
+	}while(pass[p-1]!='\r');
+	pass[p-1]='\0';
+	//printf("\nYou have entered %s as password.",pass);
+//	getch();
+   // scanf("%s",&pass);
     //gets(pass);
     result=strcmp(pass,password);
     if(result!=0){
@@ -273,45 +376,67 @@ void adminLogin(){
 
     }else{
         do{
-            printf("1.status\t2.add item\t3.change status \t4.logout\n");
+            system("cls");
+            printf("\n\n1.inventory\t2.add item\t3.delete item\t4.change status \t5.logout\n");
             scanf("%d",&c);
             switch(c){
                 case 1:adminStatus();
                     break;
                 case 2:addItem_admin();
                     break;
-                case 3:changeStatus();
+                case 3:deleteItem();
                     break;
-
+                case 4:changeStatus();
+                    break;
+				case 5:break;
                 default:;
             }
-        }while(c!=3);
+        }while(c!=5);
     }
+
 }
 
 void changeStatus(){
-    int c=0,c1=0,orderNo;
-    do {
-        printf("press 1 to change status \n 0 to exit ");
-        //getch();
-        fflush(stdout);
-        scanf(" %d",&c);
-        if (c==1){
+    int c=-1,c1=0,orderNo;
+     system("cls");
+     showStatus();
+    while((c!=0) && (queueSize()>0)){
+        c1=peekQueue();
+
+    	if(c!=1){
+
+        	printf("press 1 to complete order %d \n 0 to exit\n",c1);
+        	//getch();
+        	fflush(stdout);
+        	scanf(" %d",&c);
+    	}
+		if (c==1){
             orderNo=dequeue();
             addCompleted(orderNo);
+            system("cls");
             printf("order no %d was completed\n",orderNo);
+            showStatus();
+
         }else{
-        break;
+            break;
         }
-        printf("again? (1/0)");
+//        system("cls");
+//        showStatus();
+        c1=peekQueue();
+        printf("press 1 to complete order %d \n 0 to exit\n",c1);
         fflush(stdout);
-        scanf("%d",&c1);
-    }while(c1!=0);
+        scanf("%d",&c);
+    }
+    //while(c!=0);
+
+    if(queueSize()<=0){
+
+        printf("\nthere are no pending orders\n");
+    }
 
 }
 
-void gotoxy(int x,int y)
-{
+void gotoxy(int x,int y){
 	COORD coord;
 	HANDLE a;
 	coord.X=x;
@@ -322,32 +447,24 @@ SetConsoleCursorPosition(a,coord);
 
 }
 
-/*void load()
-{
-	int r,q;
 
-	gotoxy(30,14);
-	printf("menu is being loaded....");
-	gotoxy(30,15);
-	for(r=0;r<=20;r++)
-	{
-		for(q=0;q<=10000000;q++);
-		printf("%c",177);
+int peekQueue(){
+    return head->orderNo;
 
-	}
-     getch();
-}*/
+}
 
 int main()
 {
 	int c;
 	welcome();
-	system("cls");
     create();
 
 	do{
-		printf("1. MENU AND ORDER\n2. ORDER STATUS\n3. ADMIN LOGIN\t4. EXIT\n");
-		printf("enter choice\n");
+        system("cls");
+        printf("items in menu %d \t pending orders %d\n",itemsSize(),queueSize());
+		printf("********main menu*********\n\n");
+		printf("     1. MENU AND ORDER\n\n     2. ORDER STATUS\n\n     3. ADMIN LOGIN\n\n     4. EXIT\n\n");
+		printf("     enter choice\n");
 		scanf("%d",&c);
 		switch(c)
 		{
@@ -364,4 +481,3 @@ int main()
 	while(c!=4);
 
 }
-
